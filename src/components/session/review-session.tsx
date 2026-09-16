@@ -238,9 +238,12 @@ export function ReviewSession() {
     void run([...messages, { role: 'user', content }])
   }
 
-  const panelNames = report.assignment
-    ? REVIEWERS.filter((reviewer) => report.assignment.includes(reviewer.name)).map((reviewer) => reviewer.name)
-    : report.reviewers.map((block) => block.name)
+  const pickedNames = /^\[지정 검토자:\s*(.+)\]$/m.exec(messages[0]?.content ?? '')?.[1]?.split('·').map((name) => name.trim())
+  const panelNames = pickedNames
+    ? [...pickedNames, '반대자']
+    : report.assignment
+      ? REVIEWERS.filter((reviewer) => report.assignment.includes(reviewer.name)).map((reviewer) => reviewer.name)
+      : report.reviewers.map((block) => block.name)
   const panelReviewers = panelNames
     .map((name) => reviewerByName(name))
     .filter((reviewer): reviewer is NonNullable<ReturnType<typeof reviewerByName>> => Boolean(reviewer))
@@ -353,20 +356,19 @@ export function ReviewSession() {
             <b>Q&amp;A</b>
           </div>
 
-          {messages.length <= 2 && !streaming ? <div className={styles.qnaIntro}>
-            <div className={styles.panelList}>
-              {panelReviewers.map((reviewer) => <div className={styles.panelMember} key={reviewer.id}>
-                <Image alt={reviewer.name} height={44} src={reviewer.avatar} width={44} />
-                <div><b>{reviewer.label}</b><span>{reviewer.question}</span></div>
-              </div>)}
-            </div>
-            <p className={styles.suggestLabel}>이렇게 물어보세요</p>
-            <div className={styles.suggestChips}>
-              {QNA_SUGGESTS.map((suggest) => <button key={suggest.text} onClick={() => { setTarget(suggest.target ?? ''); setInput(suggest.text) }} type="button">{suggest.text}</button>)}
-            </div>
-          </div> : null}
-
           <div className={styles.thread}>
+            {messages.length <= 2 && !streaming ? <div className={styles.qnaIntro}>
+              <div className={styles.panelList}>
+                {panelReviewers.map((reviewer) => <div className={styles.panelMember} key={reviewer.id}>
+                  <Image alt={reviewer.name} height={44} src={reviewer.avatar} width={44} />
+                  <div><b>{reviewer.label}</b><span>{reviewer.question}</span></div>
+                </div>)}
+              </div>
+              <p className={styles.suggestLabel}>이렇게 물어보세요</p>
+              <div className={styles.suggestChips}>
+                {QNA_SUGGESTS.map((suggest) => <button key={suggest.text} onClick={() => { setTarget(suggest.target ?? ''); setInput(suggest.text) }} type="button">{suggest.text}</button>)}
+              </div>
+            </div> : null}
             {messages.slice(2).map((message, index) => {
               if (message.role !== 'user') return <DiscussionReply content={message.content} key={index} />
               const detail = /^\[상세:\s*([^\]]+)\]\s*$/.exec(message.content)

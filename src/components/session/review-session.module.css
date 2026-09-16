@@ -111,6 +111,7 @@
 .askHead b{font-size:16px;color:#0a1b33}
 .askPanel .agendaToggle{margin-top:0}
 .askPanel .thread{margin-top:12px;overflow-y:auto;flex:1;min-height:120px;padding-right:4px}
+.askPanel .qnaIntro{margin-top:0}
 .askPanel .inputArea{position:static;margin-top:14px}
 .askPanel .inputBar{box-shadow:none;padding:10px}
 .modalOverlay{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(10,27,51,.45)}
