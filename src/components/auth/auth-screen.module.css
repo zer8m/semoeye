@@ -1,0 +1,130 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  font-family: 'Pretendard Variable', Pretendard, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(13, 13, 13, .28);
+  backdrop-filter: blur(6px);
+}
+
+.card {
+  position: relative;
+  width: min(420px, 100%);
+  padding: 32px;
+  border: 1px solid rgba(13, 13, 13, .08);
+  border-radius: 24px;
+  background: #ffffff;
+  color: #0d0d0d;
+  box-shadow: 0 24px 60px rgba(13, 13, 13, .16);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.cardHeader h2 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -.03em;
+}
+
+.cardHeader a {
+  padding: 8px 11px;
+  border-radius: 999px;
+  color: #6e6a69;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.cardHeader a:hover {
+  color: #0d0d0d;
+}
+
+.card form {
+  display: grid;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.card label {
+  display: grid;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.card input {
+  width: 100%;
+  min-height: 46px;
+  padding: 0 13px;
+  border: 1px solid #dedad5;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #0d0d0d;
+  font: inherit;
+  outline: none;
+}
+
+.card input:focus {
+  border-color: #0d0d0d;
+  box-shadow: 0 0 0 3px rgba(13, 13, 13, .1);
+}
+
+.card button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 48px;
+  margin-top: 8px;
+  border: 0;
+  border-radius: 999px;
+  background: #0d0d0d;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.status {
+  min-height: 20px;
+  margin: 12px 0 0;
+  color: #6e6a69;
+  font-size: 13px;
+}
+
+.switcher {
+  margin: 14px 0 0;
+  color: #6e6a69;
+  font-size: 14px;
+}
+
+.switcher a {
+  color: #0d0d0d;
+  font-weight: 600;
+  text-underline-offset: 4px;
+}
+
+@media (max-width: 800px) {
+  .card {
+    padding: 24px;
+  }
+
+  .cardHeader h2 {
+    font-size: 26px;
+  }
+}

@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600&display=swap');
+@import 'tailwindcss';
+
+:root {
+  --acid: #dcff4e;
+  --coral: #ff725c;
+  --ink: #11130f;
+  --ink-soft: #181b16;
+  --line: #3b4036;
+  --muted: #a7ad9e;
+  --muted-dark: #60665a;
+  --paper: #f3efe4;
+  --font-sans: Inter, Pretendard, "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { background: var(--ink); }
+body { margin: 0; background: radial-gradient(circle at 8% 0%, rgba(220,255,78,.1), transparent 24%), var(--ink); color: var(--paper); font-family: var(--font-sans); }
+button, a { transition: transform 150ms ease, filter 150ms ease; }
+button:hover, a:hover { filter: brightness(1.06); transform: translateY(-2px); }
+button:focus-visible, a:focus-visible { outline: 3px solid var(--coral); outline-offset: 3px; }
+::selection { background: var(--acid); color: var(--ink); }
