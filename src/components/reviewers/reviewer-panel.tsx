@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import styles from './reviewer-panel.module.css'
 import { autoAssign, reviewerAffinities, type Affinity } from '@/lib/match'
@@ -13,10 +13,11 @@ const MAX_PICK = 3
 
 export function ReviewerPanel() {
   const router = useRouter()
-  const [ready, setReady] = useState(false)
+  const [agenda, setAgenda] = useState<string | null>(null)
   const [picked, setPicked] = useState<readonly string[]>([])
   const [limitHit, setLimitHit] = useState(false)
-  const [affinities, setAffinities] = useState<readonly Affinity[]>([])
+  const affinities = useMemo<readonly Affinity[]>(() => (agenda ? reviewerAffinities(agenda) : []), [agenda])
+  const autoNames = useMemo<readonly string[]>(() => (agenda ? autoAssign(agenda) : []), [agenda])
 
   useEffect(() => {
     const draft = window.sessionStorage.getItem('semoeye:draft')
@@ -24,9 +25,7 @@ export function ReviewerPanel() {
       router.replace('/review')
       return
     }
-    const parsed = JSON.parse(draft) as { agenda: string }
-    setAffinities(reviewerAffinities(parsed.agenda))
-    setReady(true)
+    setAgenda((JSON.parse(draft) as { agenda: string }).agenda)
   }, [router])
 
   function togglePick(id: string) {
@@ -61,7 +60,7 @@ export function ReviewerPanel() {
     return affinities.find((item) => item.reviewer.id === id)
   }
 
-  if (!ready) return null
+  if (agenda === null) return null
 
   return <main className={styles.page}>
     <header className={styles.topbar}>
@@ -97,7 +96,8 @@ export function ReviewerPanel() {
               if (reviewer.always) return <span className={`${styles.affinity} ${styles.affinityAlways}`}>항상 포함</span>
               if (!affinity) return null
               const percent = Math.round(affinity.relative * 100)
-              return <span className={`${styles.affinity} ${percent >= 60 ? styles.affinityHigh : ''}`}>안건 적합도 {percent}%</span>
+              const auto = picked.length === 0 && autoNames.includes(reviewer.name)
+              return <span className={`${styles.affinity} ${auto ? styles.affinityHigh : ''}`}>{auto ? '자동 배정 · ' : ''}안건 적합도 {percent}%</span>
             })()}</h2>
             <dl>
               <div><dt>WHO</dt><dd>{reviewer.persona}</dd></div>

@@ -1,10 +1,9 @@
-import { readFileSync, writeFileSync } from 'node:fs'
+import { writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
-const env = Object.fromEntries(readFileSync(join(root, '.env.local'), 'utf8').split('\n').filter((line) => line.includes('=')).map((line) => [line.slice(0, line.indexOf('=')), line.slice(line.indexOf('=') + 1).trim()]))
-const skill = readFileSync(join(root, 'skill', 'multi-angle-review.md'), 'utf8')
+const api = process.env.SEED_API_URL ?? 'http://localhost:3000/api/review'
 
 const EMBED_DIM = 256
 
@@ -34,22 +33,17 @@ const SEEDS = [
 ]
 
 async function generate(agenda) {
-  const res = await fetch(`${env.LLM_BASE_URL}/chat/completions`, {
+  const res = await fetch(api, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${env.LLM_API_KEY}` },
-    body: JSON.stringify({
-      model: env.LLM_MODEL,
-      max_tokens: 4000,
-      reasoning: { effort: 'low' },
-      messages: [{ role: 'system', content: skill }, { role: 'user', content: agenda }],
-    }),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages: [{ role: 'user', content: agenda }] }),
     signal: AbortSignal.timeout(240000),
   })
-  if (!res.ok) throw new Error(`upstream ${res.status}`)
-  const json = await res.json()
-  const report = json.choices?.[0]?.message?.content ?? ''
-  if (!report.includes('판정')) throw new Error('incomplete report')
-  return report.trim()
+  if (!res.ok) throw new Error(`api ${res.status}`)
+  if (res.headers.get('x-fallback') === '1' || res.headers.get('x-demo') === '1') throw new Error('not a live report')
+  const report = (await res.text()).replace(/\r\n/g, '\n').trim()
+  if (!report.includes('판정') || !report.includes('## 위험도')) throw new Error('incomplete report')
+  return report
 }
 
 const rows = []

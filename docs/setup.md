@@ -66,7 +66,7 @@ language sql stable as $$
 $$;
 ```
 
-시드 데이터는 `node scripts/seed-fallback.mjs`로 생성한다. 완료되면 `scripts/seed.sql`이 만들어지고, 그 내용을 SQL Editor에서 실행하면 폴백 저장소가 채워진다.
+시드 데이터는 개발 서버(`npm run dev`)를 켠 상태에서 `node scripts/seed-fallback.mjs`로 생성한다. 서비스와 같은 프롬프트로 검토를 만들기 위해 로컬 `/api/review`를 호출한다(다른 주소면 `SEED_API_URL` 환경 변수로 지정). 완료되면 `scripts/seed.sql`이 만들어지고, 그 내용을 SQL Editor에서 실행하면 폴백 저장소가 채워진다.
 
 ## 실행
 
