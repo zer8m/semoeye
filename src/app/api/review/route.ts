@@ -88,7 +88,7 @@ async function fallbackFromStore(agenda: string): Promise<Response | null> {
     const rows = (await res.json()) as { report?: string }[]
     const report = rows?.[0]?.report
     if (!report) return null
-    return slowStream(report, { 'X-Fallback': '1' })
+    return slowStream(report.replace(/\r\n?/g, '\n'), { 'X-Fallback': '1' })
   } catch {
     return null
   }
