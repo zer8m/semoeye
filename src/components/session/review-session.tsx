@@ -46,6 +46,13 @@ function riskClass(level: RiskLevel): string {
   return styles.riskLow
 }
 
+function verdictText(label: VerdictLabel | null): string {
+  if (label === '진행') return styles.textGo
+  if (label === '폐기') return styles.textDrop
+  if (label === '보류') return styles.textHold
+  return ''
+}
+
 function verdictClass(label: VerdictLabel | null): string {
   if (label === '진행') return styles.verdictGo
   if (label === '폐기') return styles.verdictDrop
@@ -77,6 +84,10 @@ export function ReviewSession() {
   const firstReport = messages.length > 1 ? messages[1].content : phase !== 'idle' && messages.length === 1 ? streaming : ''
   const report = useMemo(() => parseReport(firstReport), [firstReport])
   const risk = useMemo(() => parseRisk(firstReport), [firstReport])
+  const score = useMemo(() => {
+    const all = report.reviewers.flatMap((block) => block.scores.map((item) => item.score))
+    return all.length > 0 ? Math.round((all.reduce((sum, value) => sum + value, 0) / all.length / 5) * 100) : null
+  }, [report])
 
   const verdict = useMemo(() => {
     let current = messages.length > 1 ? parseVerdict(messages[1].content) : parseVerdict(streaming)
@@ -90,6 +101,8 @@ export function ReviewSession() {
     if (messages.length > 1 && streamingChange && current) current = { ...current, label: streamingChange.to, reason: streamingChange.reason }
     return current
   }, [messages, streaming])
+  const verdictBasis = verdict?.bullets.find((bullet) => bullet.startsWith('판정 근거'))?.replace(/^판정 근거\s*[:：]\s*/, '') ?? ''
+  const verdictBullets = verdict?.bullets.filter((bullet) => !bullet.startsWith('판정 근거')) ?? []
 
   function reviewPayload(all: readonly ChatMessage[]) {
     let current = all.length > 1 ? parseVerdict(all[1].content) : null
@@ -318,34 +331,35 @@ export function ReviewSession() {
 
         {report.agreed || report.split || report.unspoken || verdict ? <div className={styles.summaryBox}>
           <p className={styles.summaryLabel}>전체 요약</p>
-          <div className={styles.pointGrid}>
-            {report.agreed ? <div><span>공통점</span><p>{report.agreed}</p></div> : null}
-            {report.split ? <div><span>차이점</span><p>{report.split}</p></div> : null}
-            {report.unspoken ? <div className={styles.unspoken}><span>주의할 점</span><p>{report.unspoken}</p></div> : null}
-          </div>
-          {risk && messages.length > 1 ? <div className={styles.riskBox}>
-            <div className={styles.riskHead}>
-              <span>위험도</span>
-              <b className={riskClass(risk.overall)}>{risk.overall}</b>
+          {verdict && messages.length > 1 ? <div className={styles.sumRow}>
+            <span className={styles.sumKey}>판정</span>
+            <div className={styles.sumVerdict}>
+              <strong className={verdictText(verdict.label)}>{verdict.label}</strong>
+              {score !== null ? <em>{score}<small> / 100</small></em> : null}
             </div>
-            <div className={styles.riskItems}>
-              {risk.items.map((item) => <div key={item.name}>
+          </div> : null}
+          {risk && messages.length > 1 ? <div className={styles.sumRow}>
+            <span className={styles.sumKey}>위험도</span>
+            <ul className={styles.sumRisk}>
+              {risk.items.map((item) => <li key={item.name}>
                 <span className={riskClass(item.level)}>{item.level}</span>
                 <b>{item.name}</b>
                 {item.reason ? <p>{item.reason}</p> : null}
-              </div>)}
-            </div>
+              </li>)}
+            </ul>
           </div> : null}
-
-          {verdict && messages.length > 1 ? <div className={`${styles.verdictBox} ${verdictClass(verdict.label)}`}>
-            <div className={styles.verdictHead}>
-              <span>판정</span>
-              <strong>{verdict.label}</strong>
-              {verdict.reason ? <p>{verdict.reason}</p> : null}
+          {report.agreed ? <div className={styles.sumRow}><span className={styles.sumKey}>공통 의견</span><p>{report.agreed}</p></div> : null}
+          {report.split ? <div className={styles.sumRow}><span className={styles.sumKey}>갈린 의견</span><p>{report.split}</p></div> : null}
+          {report.unspoken ? <div className={styles.sumRow}><span className={styles.sumKey}>주의할 점</span><p>{report.unspoken}</p></div> : null}
+          {verdict && messages.length > 1 && (verdict.reason || verdict.bullets.length > 0) ? <div className={styles.sumRow}>
+            <span className={styles.sumKey}>판정 내용</span>
+            <div>
+              {verdict.reason ? <p className={styles.sumReason}>{verdict.reason}</p> : null}
+              {verdictBasis ? <p className={styles.sumBasis}>{verdictBasis}</p> : null}
+              {verdictBullets.length > 0 ? <ul className={styles.sumBullets}>
+                {verdictBullets.map((bullet) => <li key={bullet}>{bullet}</li>)}
+              </ul> : null}
             </div>
-            {verdict.bullets.length > 0 ? <ul className={styles.verdictList}>
-              {verdict.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}
-            </ul> : null}
           </div> : null}
         </div> : null}
       </div>

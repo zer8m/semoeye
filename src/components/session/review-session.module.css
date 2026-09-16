@@ -29,9 +29,6 @@
 .pointGrid>div{padding:16px 18px;border:1px solid #dfe3e8;border-radius:14px;background:#fff}
 .pointGrid span{display:block;font-size:11px;font-weight:700;letter-spacing:.14em;color:#60708a}
 .pointGrid p{margin:8px 0 0;font-size:13.5px;line-height:1.6;color:#0a1b33;white-space:pre-wrap}
-.unspoken{grid-column:1/-1;background:#0a1b33!important;border-color:#0a1b33!important}
-.unspoken span{color:#98b7ff}
-.unspoken p{color:#fff}
 .rawStream{margin-top:24px;padding:18px;border-radius:14px;background:rgba(10,27,51,.05);font-size:13px;line-height:1.6;color:#3d4c63;white-space:pre-wrap;font-family:inherit}
 .verdictDetail p{margin:4px 0 0;font-size:13.5px;line-height:1.55}
 .thread{margin-top:34px;display:flex;flex-direction:column;gap:14px}
@@ -101,9 +98,26 @@
 .reviewerFailure{margin:0;font-size:13px;line-height:1.55;color:#8a3a30}
 .reviewerFailure b{margin-right:5px;font-size:11.5px;letter-spacing:.06em}
 .detailButton{margin-top:auto;display:inline-flex;align-items:center;white-space:nowrap;width:fit-content}
-.summaryBox{padding:20px 22px;border:1px solid #e3e7ec;border-radius:18px;background:#fff}
+.summaryBox{padding:20px 24px 8px;border:1px solid #e3e7ec;border-radius:18px;background:#fff}
+.sumRow{display:grid;grid-template-columns:104px minmax(0,1fr);gap:18px;align-items:start;padding:16px 0;border-top:1px solid #edf0f3}
+.sumRow>p,.sumReason{margin:0;font-size:15px;line-height:1.65;color:#0a1b33;white-space:pre-wrap}
+.sumKey{padding-top:2px;font-size:13px;font-weight:600;color:#7b8794}
+.sumVerdict{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.sumVerdict strong{font-size:30px;font-weight:800;letter-spacing:-.01em;line-height:1}
+.sumVerdict em{font-style:normal;font-size:26px;font-weight:700;color:#0a1b33;letter-spacing:-.01em}
+.sumVerdict em small{font-size:14px;font-weight:600;color:#7b8794}
+.textGo{color:#1f7a4d}.textHold{color:#b8760f}.textDrop{color:#d1362b}
+.sumRisk{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.sumRisk li{padding:12px 14px;border:1px solid #edf0f3;border-radius:12px}
+.sumRisk li span{display:inline-block;padding:2px 10px;border-radius:999px;font-size:12px;font-weight:700}
+.sumRisk li b{display:block;margin-top:8px;font-size:14.5px;font-weight:600;color:#0a1b33}
+.sumRisk li p{margin:4px 0 0;font-size:13.5px;line-height:1.55;color:#3d4c63}
+.sumBasis{margin:8px 0 0;font-size:14.5px;line-height:1.7;color:#3d4c63;white-space:pre-wrap}
+.sumBullets{margin:8px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px}
+.sumBullets li{position:relative;padding-left:16px;font-size:14.5px;line-height:1.6;color:#0a1b33}
+.sumBullets li::before{content:'·';position:absolute;left:2px;font-weight:800;color:#7b8794}
+@media (max-width:760px){.sumRow{grid-template-columns:1fr;gap:6px}.sumRisk{grid-template-columns:1fr}}
 .summaryLabel{margin:0 0 12px;font-size:11px;font-weight:800;letter-spacing:.16em;color:#60708a}
-.summaryBox .pointGrid{margin-top:0}
 .summaryBox .nextAction{margin-top:14px}
 .rightCol{position:sticky;top:18px}
 .askPanel{display:flex;flex-direction:column;max-height:calc(100vh - 120px);padding:18px 18px 14px;border:1px solid #e3e7ec;border-radius:18px;background:#fff;box-shadow:0 6px 18px rgba(10,27,51,.05)}
@@ -141,16 +155,6 @@
 
 .rebuttal{border:1px solid #e3e7ec;border-left:4px solid #0a1b33;border-radius:18px;background:#fff;padding:18px 22px;box-shadow:0 6px 18px rgba(10,27,51,.05)}
 .summaryBox{box-shadow:0 6px 18px rgba(10,27,51,.05)}
-.summaryBox .pointGrid{gap:12px}
-.summaryBox .pointGrid>div{border-radius:14px}
-.verdictBox{margin-top:14px;padding:20px 22px;border-radius:14px}
-.verdictHead{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
-.verdictHead span{font-size:11px;font-weight:800;letter-spacing:.16em;opacity:.75}
-.verdictHead strong{font-size:26px;font-weight:800;letter-spacing:.02em}
-.verdictHead p{flex:1 1 100%;margin:8px 0 0;font-size:15px;font-weight:600;line-height:1.6}
-.verdictList{margin:12px 0 0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:7px}
-.verdictList li{position:relative;padding-left:16px;font-size:13.5px;line-height:1.6}
-.verdictList li::before{content:'·';position:absolute;left:2px;font-weight:800}
 
 .bootStatus{display:inline-flex;align-items:center;gap:10px;margin-top:18px;padding:12px 22px;border-radius:999px;background:#eef3fb}
 .bootStatus p{margin:0;font-size:15px;font-weight:700;color:#22314a}
@@ -190,10 +194,6 @@
 .summaryLabel{font-size:12px}
 .pointGrid span{font-size:12px}
 .pointGrid p{font-size:15px;line-height:1.65}
-.unspoken p{font-size:15.5px}
-.verdictHead strong{font-size:29px}
-.verdictHead p{font-size:16.5px}
-.verdictList li{font-size:15px}
 .askHead b{font-size:19px}
 .bubbleUser{font-size:15.5px}
 .speech b{font-size:14.5px}
@@ -227,10 +227,6 @@
 .summaryLabel{font-size:13px}
 .pointGrid span{font-size:13px}
 .pointGrid p{font-size:16.5px}
-.unspoken p{font-size:17px}
-.verdictHead strong{font-size:32px}
-.verdictHead p{font-size:18px}
-.verdictList li{font-size:16.5px}
 .askHead b{font-size:21px}
 .bubbleUser{font-size:17px}
 .speech b{font-size:16px}
@@ -279,20 +275,8 @@
 @media (max-width:1500px){.reviewerGrid3{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:820px){.reviewerGrid,.reviewerGrid3{grid-template-columns:1fr}}
 
-.summaryBox .unspoken span{color:#a9c4ff}
-.summaryBox .unspoken p{color:#fff}
-
 .fallbackNote{padding:14px 18px;border:1px solid #e8d9a8;border-left:5px solid #b7902a;border-radius:12px;background:#fbf4de;color:#7a5d14;font-size:15px;font-weight:600;line-height:1.6}
 
-.riskBox{margin-top:14px;padding:18px 20px;border:1px solid #e3e7ec;border-radius:14px;background:#f8fafc}
-.riskHead{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.riskHead span{font-size:12px;font-weight:800;letter-spacing:.14em;color:#60708a}
-.riskHead b{padding:5px 16px;border-radius:999px;font-size:15px;font-weight:800}
-.riskItems{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
-.riskItems>div{padding:12px 14px;border:1px solid #e3e7ec;border-radius:12px;background:#fff}
-.riskItems span{display:inline-block;margin-bottom:6px;padding:3px 12px;border-radius:999px;font-size:12.5px;font-weight:800}
-.riskItems b{display:block;font-size:14.5px;color:#0a1b33}
-.riskItems p{margin:4px 0 0;font-size:13.5px;line-height:1.55;color:#3d4c63}
 .riskLow{background:#e2f3e9;color:#1f7a4d}
 .riskMid{background:#fbf0dc;color:#9a6412}
 .riskHigh{background:#fae4e1;color:#b3392e}
